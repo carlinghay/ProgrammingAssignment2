@@ -1,34 +1,43 @@
-## Put comments here that give an overall description of what your
-## functions do
+## cachematrix.R : Written on June 18, 2014
+##      - contains 2 functions: makeCacheMatrix, cacheSolve
+##      - combined, the functions create a special "matrix" object that can compute, return, and cache 
+##            its inverse so that the same computation does not need to be repeated if the matrix remains the same
 
-## Write a short comment describing this function
+## makeCacheMatrix is a function which contains a list of functions that perform the following tasks:
+## 1) set the value of the matrix 'x'
+## 2) retrieves the cached value of the matrix 'x' if it exists
+## 3) sets the value of the inverse of the matrix 'x' to the variable 'inv'
+## 4) retrieves the value of the inverse of the matrix if it exists
 
 makeCacheMatrix <- function(x = matrix()) {
-  m <- NULL
+  inv <- NULL
   set <- function(y) {
     x <<- y
-    m <<- NULL
+    inv <<- NULL
   }
   get <- function() x
-  setmean <- function(mean) m <<- mean
-  getmean <- function() m
+  setinverse <- function(inverse) inv <<- inverse
+  getinverse <- function() inv
   list(set = set, get = get,
-       setmean = setmean,
-       getmean = getmean)
+       setinverse = setinverse,
+       getinverse = getinverse)
 }
 
-## Write a short comment describing this function
+## cacheSolve: returns the inverse of the matrix 'x'
+## 1) first check to see if the matrix inverse has already been calculated, 
+##     if so the matrix inverse "inv" is retrieved from the cache
+## 2) if the inverse has not already been computed, then the inverse is calculated and returned
 
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
-  m <- x$getmean()
-  if(!is.null(m)) {
+  inv <- x$getinverse()
+  if(!is.null(inv)) {
     message("getting cached data")
-    return(m)
+    return(inv)
   }
   data <- x$get()
-  m <- mean(data, ...)
-  x$setmean(m)
-  m
+  inv <- solve(data, ...)
+  x$setinverse(inv)
+  inv
   
 }
